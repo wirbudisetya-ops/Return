@@ -1,0 +1,156 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authorized staff user profile with assigned role and DC access permissions",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User email address used for authorization"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Staff name"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["SUPER_ADMIN", "OPERATOR_SOLO", "OPERATOR_JOGJA", "INBOUND_STAFF", "VIEWER"],
+          "description": "Assigned authorization role"
+        },
+        "allowedDCs": {
+          "type": "array",
+          "description": "DCs the user is permitted to manage"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "PENDING", "REVOKED"],
+          "description": "Access authorization status"
+        },
+        "addedBy": {
+          "type": "string",
+          "description": "Email of admin who added this authorization"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp ISO string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Update timestamp ISO string"
+        }
+      },
+      "required": ["email", "role", "status"]
+    },
+    "CosmeticReturn": {
+      "title": "CosmeticReturn",
+      "description": "Cosmetic goods store return record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document tracking ID"
+        },
+        "storeCode": {
+          "type": "string",
+          "description": "Store code"
+        },
+        "storeName": {
+          "type": "string",
+          "description": "Store name"
+        },
+        "dcLocation": {
+          "type": "string",
+          "enum": ["DC_SOLO", "DC_JOGJA"],
+          "description": "Distribution center"
+        },
+        "returnMethod": {
+          "type": "string",
+          "enum": ["REGULAR", "MANUAL"],
+          "description": "Return method"
+        },
+        "handoverStatus": {
+          "type": "string",
+          "enum": ["SERAH_TERIMA_DRIVER", "SUDAH_DITERIMA_OPERATOR"],
+          "description": "Handover status"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Total units or items"
+        },
+        "totalValue": {
+          "type": "number",
+          "description": "Total monetary value"
+        },
+        "manualItems": {
+          "type": "array",
+          "description": "List of scanned manual return items"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Email or staff name of the editor"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update ISO timestamp"
+        }
+      },
+      "required": ["id", "storeName", "dcLocation", "returnMethod", "handoverStatus"]
+    },
+    "JogjaTransfer": {
+      "title": "JogjaTransfer",
+      "description": "Manifest for transfer from DC Jogja to DC Solo",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Transfer manifest ID"
+        },
+        "manifestNumber": {
+          "type": "string",
+          "description": "Manifest code"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["SIAP_KIRIM", "DALAM_PERJALANAN", "DITERIMA_SOLO"],
+          "description": "Transfer delivery status"
+        },
+        "totalColli": {
+          "type": "number",
+          "description": "Total colli count"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["id", "manifestNumber", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "User"
+      },
+      "description": "User profile and authorization roles"
+    },
+    "/returns/{returnId}": {
+      "schema": {
+        "$ref": "CosmeticReturn"
+      },
+      "description": "Master cosmetic returns data"
+    },
+    "/transfers/{transferId}": {
+      "schema": {
+        "$ref": "JogjaTransfer"
+      },
+      "description": "Jogja to Solo transfer manifest records"
+    },
+    "/test/{docId}": {
+      "schema": {
+        "$ref": "User"
+      },
+      "description": "Firestore connectivity test document"
+    }
+  }
+}
